@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TOOLS, Tool } from "@/lib/tools";
-import AdSlot from "@/components/AdSlot";
+import { TOOLS, Tool } from "../../../lib/tools";
+import AdSlot from "../../../components/AdSlot";
 import { Upload, File, CheckCircle2, AlertCircle, Loader2, Download, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";

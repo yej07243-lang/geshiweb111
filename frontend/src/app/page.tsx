@@ -1,4 +1,4 @@
-import { TOOLS } from "@/lib/tools";
+﻿import { TOOLS } from "../lib/tools";
 import Link from "next/link";
 import { FileText, Image as ImageIcon, FileOutput, ArrowRight } from "lucide-react";
 
@@ -59,3 +59,4 @@ export default function Home() {
     </div>
   );
 }
+
