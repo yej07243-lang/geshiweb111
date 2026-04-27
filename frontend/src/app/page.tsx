@@ -1,102 +1,129 @@
-import { TOOLS } from "../lib/tools";
+"use client";
+
 import Link from "next/link";
-import { FileText, Image as ImageIcon, ArrowRight, Zap, Shield, MousePointer2 } from "lucide-react";
+import { useContext } from "react";
+import { ArrowRight, FileCheck2, FileText, Image as ImageIcon, ShieldCheck, Sparkles, TimerReset } from "lucide-react";
+import { LanguageContext } from "../components/LanguageProvider";
+import { dict } from "../lib/i18n";
+import { TOOLS } from "../lib/tools";
 
 export default function Home() {
+  const { lang } = useContext(LanguageContext);
+  const t = dict[lang as keyof typeof dict] || dict.en;
+  const featured = TOOLS.slice(0, 3);
+
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative pt-24 pb-32 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-[120px] opacity-50"></div>
-          <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] bg-indigo-100 rounded-full blur-[120px] opacity-50"></div>
-        </div>
-
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 text-blue-600 text-sm font-bold mb-8 shadow-sm">
-            <Zap size={14} className="fill-blue-600" />
-            <span>快速、免费、且无限制</span>
+    <div>
+      <section className="soft-band border-b border-slate-200">
+        <div className="mx-auto grid min-h-[620px] max-w-7xl items-center gap-12 px-4 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-20">
+          <div>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-md border border-teal-200 bg-white/80 px-3 py-2 text-sm font-black text-teal-800 shadow-sm">
+              <Sparkles size={16} />
+              {t.fastFree}
+            </div>
+            <h1 className="max-w-4xl text-5xl font-black leading-[1.02] tracking-normal text-slate-950 md:text-7xl">
+              {t.heroTitle}
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg font-medium leading-8 text-slate-600 md:text-xl">{t.heroSubtitle}</p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="#tools"
+                className="focus-ring inline-flex h-12 items-center justify-center gap-2 rounded-md bg-teal-700 px-6 text-base font-black text-white shadow-lg shadow-teal-900/10 transition hover:bg-teal-800"
+              >
+                {t.chooseTool}
+                <ArrowRight size={19} />
+              </Link>
+              <Link
+                href="/tools/pdf-to-word"
+                className="focus-ring inline-flex h-12 items-center justify-center rounded-md border border-slate-300 bg-white px-6 text-base font-black text-slate-900 transition hover:border-teal-700 hover:text-teal-800"
+              >
+                PDF to Word
+              </Link>
+            </div>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black mb-8 tracking-tight text-slate-900 leading-[1.1]">
-            无限可能地<br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 animate-gradient-x">
-              转换您的文件
-            </span>
-          </h1>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
-            体验数秒内的高质量转换。无需注册、无水印、无限制，专注于极致效率。
-          </p>
+
+          <div className="surface rounded-lg p-4">
+            <div className="rounded-md border border-slate-200 bg-slate-950 p-4 text-white">
+              <div className="mb-5 flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-teal-200">{t.chooseTool}</p>
+                  <p className="text-2xl font-black">Conversion Desk</p>
+                </div>
+                <FileCheck2 className="text-amber-300" size={32} />
+              </div>
+              <div className="space-y-3">
+                {featured.map((tool) => (
+                  <Link
+                    key={tool.id}
+                    href={`/tools/${tool.id}`}
+                    className="focus-ring flex items-center justify-between rounded-md bg-white/10 p-4 transition hover:bg-white/15"
+                  >
+                    <span>
+                      <span className="block font-black">{tool.name[lang as keyof typeof tool.name]}</span>
+                      <span className="text-sm text-slate-300">
+                        {tool.from.join(", ")} {"->"} {tool.to.toUpperCase()}
+                      </span>
+                    </span>
+                    <ArrowRight size={18} />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Tools Grid */}
-      <section className="max-w-7xl mx-auto px-4 pb-32">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {TOOLS.map((tool) => (
-            <Link
-              key={tool.id}
-              href={`/tools/${tool.id}`}
-              className="group glass-card p-10 rounded-[2.5rem] tool-grid-item hover:shadow-2xl hover:shadow-blue-200/40 transition-all border-slate-200/60 relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                {tool.id.includes("pdf") ? <FileText size={120} /> : <ImageIcon size={120} />}
-              </div>
-              
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-blue-200 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                {tool.id.includes("pdf") || tool.id.includes("word") ? (
-                  <FileText className="text-white" size={32} />
-                ) : (
-                  <ImageIcon className="text-white" size={32} />
-                )}
-              </div>
-              
-              <h2 className="text-2xl font-black mb-4 flex items-center text-slate-900">
-                {tool.name}
-                <ArrowRight className="ml-2 w-6 h-6 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-blue-600" />
-              </h2>
-              <p className="text-slate-500 text-lg leading-relaxed mb-4">
-                {tool.description}
-              </p>
-            </Link>
+      <section id="tools" className="mx-auto max-w-7xl px-4 py-16">
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="mb-2 text-sm font-black uppercase text-teal-800">{t.allTools}</p>
+            <h2 className="text-3xl font-black text-slate-950 md:text-4xl">{t.chooseTool}</h2>
+          </div>
+          <p className="max-w-xl text-slate-600">{t.frictionDesc}</p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {TOOLS.map((tool) => {
+            const Icon = tool.category === "document" ? FileText : ImageIcon;
+            return (
+              <Link
+                key={tool.id}
+                href={`/tools/${tool.id}`}
+                className="focus-ring group surface rounded-lg p-6 transition hover:-translate-y-1 hover:border-teal-500 hover:shadow-xl"
+              >
+                <div className="mb-6 flex items-start justify-between gap-4">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-md bg-teal-50 text-teal-800">
+                    <Icon size={24} />
+                  </span>
+                  <span className="rounded-md bg-amber-100 px-2.5 py-1 text-xs font-black text-amber-800">
+                    {tool.to.toUpperCase()}
+                  </span>
+                </div>
+                <h3 className="text-xl font-black text-slate-950">{tool.name[lang as keyof typeof tool.name]}</h3>
+                <p className="mt-3 min-h-[56px] text-sm leading-7 text-slate-600">{tool.description[lang as keyof typeof tool.description]}</p>
+                <div className="mt-5 flex items-center justify-between border-t border-slate-200 pt-4 text-sm font-bold text-slate-500">
+                  <span>{tool.from.join(", ")}</span>
+                  <ArrowRight className="text-teal-700 transition group-hover:translate-x-1" size={18} />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="border-t border-slate-200 bg-white">
+        <div className="mx-auto grid max-w-7xl gap-4 px-4 py-14 md:grid-cols-3">
+          {[
+            { icon: ShieldCheck, title: t.privacyTitle, copy: t.privacyDesc },
+            { icon: TimerReset, title: t.speedTitle, copy: t.speedDesc },
+            { icon: FileCheck2, title: t.frictionTitle, copy: t.frictionDesc },
+          ].map((item) => (
+            <div key={item.title} className="rounded-lg border border-slate-200 p-6">
+              <item.icon className="mb-5 text-teal-700" size={28} />
+              <h3 className="text-lg font-black text-slate-950">{item.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-600">{item.copy}</p>
+            </div>
           ))}
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="bg-slate-900 py-32 text-white overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500 rounded-full blur-[100px]"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500 rounded-full blur-[100px]"></div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 relative">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl font-black mb-4">为什么选择 EasyFormat?</h2>
-            <p className="text-slate-400">您的隐私和效率是我们的首要任务</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 border border-white/10 shadow-2xl">
-                <Shield className="text-blue-400" size={28} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">隐私至上</h3>
-              <p className="text-slate-400 leading-relaxed">文件在 30 分钟后自动销毁。我们采用端到端加密，绝不存储您的任何数据。</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 border border-white/10 shadow-2xl">
-                <Zap className="text-indigo-400" size={28} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">极速转换</h3>
-              <p className="text-slate-400 leading-relaxed">基于优化的云计算引擎，确保即使是大型文档也能在瞬息之间转换完成。</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 border border-white/10 shadow-2xl">
-                <MousePointer2 className="text-emerald-400" size={28} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">零干扰体验</h3>
-              <p className="text-slate-400 leading-relaxed">无账户、无广告弹窗、无干扰。打开网页，立即开始您的高效转换工作。</p>
-            </div>
-          </div>
         </div>
       </section>
     </div>

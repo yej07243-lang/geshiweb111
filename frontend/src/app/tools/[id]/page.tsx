@@ -1,183 +1,302 @@
-﻿"use client";
+"use client";
 
-import { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
-import { TOOLS, Tool } from "../../../lib/tools";
-import AdSlot from "../../../components/AdSlot";
-import { Upload, FileText, Download, RefreshCcw, AlertCircle, ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
-import { LanguageContext } from "../../layout";
+import {
+  AlertCircle,
+  ArrowLeft,
+  CheckCircle2,
+  Download,
+  FileText,
+  Home,
+  Image as ImageIcon,
+  Loader2,
+  RefreshCcw,
+  Upload,
+} from "lucide-react";
+import AdSlot from "../../../components/AdSlot";
+import { LanguageContext } from "../../../components/LanguageProvider";
 import { dict } from "../../../lib/i18n";
+import { Tool, TOOLS } from "../../../lib/tools";
+
+type ConvertStatus = "idle" | "uploading" | "processing" | "completed" | "error";
 
 export default function ToolPage() {
   const params = useParams();
   const { lang } = useContext(LanguageContext);
-  const t = dict[lang as keyof typeof dict];
-  
+  const t = dict[lang as keyof typeof dict] || dict.en;
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   const [tool, setTool] = useState<Tool | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [status, setStatus] = useState<"idle" | "uploading" | "processing" | "completed" | "error">("idle");
+  const [status, setStatus] = useState<ConvertStatus>("idle");
   const [jobId, setJobId] = useState<string | null>(null);
+  const [errorText, setErrorText] = useState("");
 
   useEffect(() => {
-    const found = TOOLS.find((t) => t.id === params.id);
-    if (found) setTool(found);
+    const found = TOOLS.find((item) => item.id === params.id);
+    setTool(found || null);
+    setFile(null);
+    setStatus("idle");
+    setJobId(null);
+    setErrorText("");
   }, [params.id]);
 
+  const reset = () => {
+    setFile(null);
+    setStatus("idle");
+    setJobId(null);
+    setErrorText("");
+    if (inputRef.current) inputRef.current.value = "";
+  };
+
+  const checkStatus = (id: string) => {
+    const interval = window.setInterval(async () => {
+      try {
+        const res = await fetch(`/api/status/${id}`);
+        const data = await res.json();
+        if (data.status === "completed") {
+          window.clearInterval(interval);
+          setStatus("completed");
+        }
+        if (data.status === "failed") {
+          window.clearInterval(interval);
+          setStatus("error");
+          setErrorText(t.error);
+        }
+      } catch {
+        window.clearInterval(interval);
+        setStatus("error");
+        setErrorText(t.error);
+      }
+    }, 1800);
+  };
+
   const handleUpload = async () => {
-    if (!file || !tool) return;
+    if (!file || !tool) {
+      setErrorText(t.fileRequired);
+      return;
+    }
+
     setStatus("uploading");
+    setErrorText("");
+
     const formData = new FormData();
     formData.append("file", file);
+
     try {
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
-      const data = await res.json();
+      const upload = await fetch("/api/upload", { method: "POST", body: formData });
+      if (!upload.ok) throw new Error("Upload failed");
+
+      const data = await upload.json();
       setJobId(data.job_id);
-      await fetch(`/api/convert?job_id=${data.job_id}&target_format=${tool.to}`, { method: "POST" });
+
+      const convert = await fetch(`/api/convert?job_id=${data.job_id}&target_format=${tool.to}`, { method: "POST" });
+      if (!convert.ok) throw new Error("Convert failed");
+
       setStatus("processing");
       checkStatus(data.job_id);
-    } catch (e) {
+    } catch (error) {
       setStatus("error");
+      setErrorText(error instanceof Error ? error.message : t.error);
     }
   };
 
-  const checkStatus = async (id: string) => {
-    const interval = setInterval(async () => {
-      const res = await fetch(`/api/status/${id}`);
-      const data = await res.json();
-      if (data.status === "completed") {
-        clearInterval(interval);
-        setStatus("completed");
-      } else if (data.status === "failed") {
-        clearInterval(interval);
-        setStatus("error");
-      }
-    }, 2000);
-  };
+  if (!tool) {
+    return (
+      <div className="mx-auto max-w-4xl px-4 py-24">
+        <Link href="/" className="focus-ring inline-flex items-center gap-2 rounded-md text-sm font-bold text-teal-800">
+          <ArrowLeft size={17} />
+          {t.allTools}
+        </Link>
+        <h1 className="mt-8 text-4xl font-black text-slate-950">{t.invalidTool}</h1>
+      </div>
+    );
+  }
 
-  if (!tool) return null;
+  const Icon = tool.category === "document" ? FileText : ImageIcon;
+  const toolName = tool.name[lang as keyof typeof tool.name];
+  const toolDescription = tool.description[lang as keyof typeof tool.description];
+  const isWorking = status === "uploading" || status === "processing";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 min-h-screen">
-      <nav className="flex items-center gap-2 text-sm text-slate-500 mb-8">
-        <Link href="/" className="hover:text-blue-600 flex items-center gap-1 font-medium"><Home size={14} /> {t.allTools}</Link>
-        <ChevronRight size={14} />
-        <span className="font-bold text-slate-900">{tool.name[lang as keyof typeof tool.name]}</span>
-      </nav>
+    <div>
+      <section className="soft-band border-b border-slate-200">
+        <div className="mx-auto max-w-7xl px-4 py-10">
+          <nav className="mb-8 flex items-center gap-2 text-sm font-bold text-slate-500">
+            <Link href="/" className="focus-ring inline-flex items-center gap-1 rounded-md hover:text-teal-800">
+              <Home size={15} />
+              {t.allTools}
+            </Link>
+            <span>/</span>
+            <span className="text-slate-900">{toolName}</span>
+          </nav>
 
-      <div className="flex flex-col lg:flex-row gap-12">
-        <div className="flex-1">
-          <div className="glass-card rounded-[2.5rem] p-10 md:p-14 shadow-sm border-slate-200/60 mb-10">
-            <h1 className="text-4xl font-black mb-4 text-slate-900">{tool.name[lang as keyof typeof tool.name]}</h1>
-            <p className="text-slate-500 text-lg mb-12">{tool.description[lang as keyof typeof tool.description]}</p>
-
-            {status === "idle" && (
-              <div 
-                className="border-2 border-dashed border-slate-200 rounded-[2rem] p-16 text-center hover:border-blue-400 hover:bg-blue-50/50 transition-all cursor-pointer group"
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); }}
-              >
-                <input type="file" className="hidden" id="fileInput" onChange={(e) => e.target.files && setFile(e.target.files[0])} accept={tool.from.join(",")} />
-                <label htmlFor="fileInput" className="cursor-pointer">
-                  <div className="w-24 h-24 bg-blue-100 rounded-3xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform shadow-lg shadow-blue-100/50">
-                    <Upload className="text-blue-600" size={40} />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-3">{t.uploadClick}</h3>
-                  <p className="text-slate-400 font-medium">{tool.from.join(", ")} (Max 20MB)</p>
-                </label>
+          <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
+            <div>
+              <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-md bg-teal-700 text-white shadow-sm">
+                <Icon size={25} />
               </div>
-            )}
+              <h1 className="text-4xl font-black leading-tight text-slate-950 md:text-6xl">{toolName}</h1>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">{toolDescription}</p>
+            </div>
 
-            {file && status === "idle" && (
-              <div className="mt-10 p-8 bg-slate-50 rounded-3xl flex items-center justify-between border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-md border border-slate-100">
-                    <FileText className="text-blue-600" size={28} />
-                  </div>
-                  <div>
-                    <p className="font-bold text-slate-900 text-lg break-all">{file.name}</p>
-                    <p className="text-sm text-slate-400">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                  </div>
-                </div>
-                <button 
-                  onClick={handleUpload}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl font-black transition-all shadow-xl shadow-blue-200 active:scale-95 text-lg"
-                >
-                  {t.convertNow}
-                </button>
-              </div>
-            )}
-
-            {(status === "uploading" || status === "processing") && (
-              <div className="text-center py-24 bg-slate-50/50 rounded-[2rem]">
-                <div className="relative w-32 h-32 mx-auto mb-10">
-                   <div className="absolute inset-0 border-4 border-blue-100 rounded-full animate-pulse"></div>
-                   <div className="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin duration-700"></div>
-                   <RefreshCcw className="absolute inset-0 m-auto text-blue-600" size={48} />
-                </div>
-                <h3 className="text-3xl font-black mb-3">
-                  {status === "uploading" ? "Uploading..." : "Converting..."}
-                </h3>
-                <p className="text-slate-500 font-medium">Sit tight, our cloud engines are on it!</p>
-              </div>
-            )}
-
-            {status === "completed" && (
-              <div className="text-center py-24 bg-emerald-50/60 rounded-[2.5rem] border border-emerald-100 shadow-sm">
-                <div className="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-emerald-100">
-                  <Download size={48} />
-                </div>
-                <h3 className="text-3xl font-black mb-8 text-emerald-900">{t.ready}</h3>
-                <a 
-                  href={`/api/download/${jobId}`}
-                  className="inline-flex items-center gap-4 bg-emerald-600 hover:bg-emerald-700 text-white px-12 py-5 rounded-[1.5rem] font-black transition-all shadow-2xl shadow-emerald-200 active:scale-95 text-xl"
-                >
-                  <Download size={24} /> {t.download}
-                </a>
-                <button 
-                  onClick={() => {setFile(null); setStatus("idle");}}
-                  className="block mx-auto mt-10 text-emerald-600 font-bold hover:underline text-lg"
-                >
-                  {t.another}
-                </button>
-              </div>
-            )}
-
-            {status === "error" && (
-              <div className="text-center py-24 bg-red-50/50 rounded-[2rem] border border-red-100">
-                <AlertCircle className="text-red-600 mx-auto mb-6" size={64} />
-                <h3 className="text-2xl font-black mb-3 text-red-900">{t.error}</h3>
-                <p className="text-red-500 mb-10 font-medium">Please try another file or refresh the page.</p>
-                <button onClick={() => setStatus("idle")} className="text-slate-700 font-bold underline px-6 py-2 rounded-lg hover:bg-red-100 transition-colors">{t.tryAgain}</button>
-              </div>
-            )}
-          </div>
-
-          <div className="glass-card rounded-[2.5rem] p-10 md:p-14 border-slate-200/60">
-             <h2 className="text-3xl font-black mb-10 text-slate-900">{t.faq}</h2>
-             <div className="space-y-10">
-                {tool.faqs.map((faq, index) => (
-                  <div key={index} className="pb-10 border-b border-slate-100 last:border-0 last:pb-0">
-                    <h3 className="text-xl font-bold text-slate-800 mb-4">Q: {faq.q[lang as keyof typeof faq.q]}</h3>
-                    <p className="text-slate-500 text-lg leading-relaxed">{faq.a[lang as keyof typeof faq.a]}</p>
-                  </div>
+            <div className="surface rounded-lg p-5">
+              <p className="text-sm font-black uppercase text-teal-800">{t.supported}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {tool.from.map((ext) => (
+                  <span key={ext} className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-black text-slate-800">
+                    {ext}
+                  </span>
                 ))}
-                {tool.faqs.length === 0 && (
-                   <div className="text-slate-400 italic">No FAQs available for this tool yet.</div>
-                )}
-             </div>
+              </div>
+              <div className="mt-5 rounded-md bg-amber-100 px-3 py-2 text-sm font-black text-amber-900">
+                {t.maxSize}
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        <aside className="w-full lg:w-96 flex flex-col gap-10">
-          <div className="sticky top-24">
-            <div className="bg-slate-50/80 rounded-[2.5rem] p-8 text-center border border-slate-200 min-h-[500px] flex flex-col items-center justify-center text-slate-400 italic backdrop-blur-sm shadow-inner">
-               <AdSlot />
-               <p className="mt-6 text-xs font-black uppercase tracking-[0.2em] text-slate-300">{t.advertisement}</p>
+      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[1fr_340px]">
+        <div className="surface rounded-lg p-4 md:p-8">
+          {status === "idle" && (
+            <>
+              <div
+                className="rounded-lg border-2 border-dashed border-slate-300 bg-white p-8 text-center transition hover:border-teal-700 hover:bg-teal-50/50 md:p-12"
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  if (event.dataTransfer.files[0]) setFile(event.dataTransfer.files[0]);
+                }}
+              >
+                <input
+                  ref={inputRef}
+                  id="fileInput"
+                  type="file"
+                  className="hidden"
+                  accept={tool.from.join(",")}
+                  onChange={(event) => {
+                    setErrorText("");
+                    if (event.target.files?.[0]) setFile(event.target.files[0]);
+                  }}
+                />
+                <label htmlFor="fileInput" className="focus-ring inline-flex cursor-pointer flex-col items-center rounded-md">
+                  <span className="mb-6 flex h-20 w-20 items-center justify-center rounded-md bg-teal-700 text-white shadow-lg shadow-teal-900/10">
+                    <Upload size={34} />
+                  </span>
+                  <span className="text-2xl font-black text-slate-950">{t.uploadClick}</span>
+                  <span className="mt-3 text-sm font-bold text-slate-500">{tool.from.join(", ")} · {t.maxSize}</span>
+                </label>
+              </div>
+
+              {file && (
+                <div className="mt-5 flex flex-col gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex min-w-0 items-center gap-4">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-white text-teal-800 shadow-sm">
+                      <FileText size={23} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-black uppercase text-slate-500">{t.selectedFile}</p>
+                      <p className="truncate text-base font-black text-slate-950">{file.name}</p>
+                      <p className="text-sm font-bold text-slate-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={reset}
+                      className="focus-ring inline-flex h-11 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-black text-slate-700 transition hover:border-slate-500"
+                    >
+                      {t.reset}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleUpload}
+                      className="focus-ring inline-flex h-11 items-center justify-center rounded-md bg-teal-700 px-5 text-sm font-black text-white transition hover:bg-teal-800"
+                    >
+                      {t.convertNow}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {errorText && <p className="mt-4 text-sm font-bold text-red-600">{errorText}</p>}
+            </>
+          )}
+
+          {isWorking && (
+            <div className="flex min-h-[360px] flex-col items-center justify-center rounded-lg bg-slate-50 p-8 text-center">
+              <Loader2 className="mb-6 animate-spin text-teal-700" size={56} />
+              <h2 className="text-3xl font-black text-slate-950">{status === "uploading" ? t.uploading : t.converting}</h2>
+              <p className="mt-3 text-base font-medium text-slate-600">{t.working}</p>
+            </div>
+          )}
+
+          {status === "completed" && (
+            <div className="flex min-h-[360px] flex-col items-center justify-center rounded-lg bg-emerald-50 p-8 text-center">
+              <CheckCircle2 className="mb-6 text-emerald-700" size={62} />
+              <h2 className="text-3xl font-black text-slate-950">{t.ready}</h2>
+              <a
+                href={`/api/download/${jobId}`}
+                className="focus-ring mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-md bg-emerald-700 px-6 text-base font-black text-white transition hover:bg-emerald-800"
+              >
+                <Download size={20} />
+                {t.download}
+              </a>
+              <button
+                type="button"
+                onClick={reset}
+                className="focus-ring mt-5 inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-black text-emerald-800 hover:bg-emerald-100"
+              >
+                <RefreshCcw size={16} />
+                {t.another}
+              </button>
+            </div>
+          )}
+
+          {status === "error" && (
+            <div className="flex min-h-[360px] flex-col items-center justify-center rounded-lg bg-red-50 p-8 text-center">
+              <AlertCircle className="mb-6 text-red-700" size={62} />
+              <h2 className="text-3xl font-black text-slate-950">{t.error}</h2>
+              <p className="mt-3 text-base font-bold text-red-700">{errorText || t.error}</p>
+              <button
+                type="button"
+                onClick={reset}
+                className="focus-ring mt-8 inline-flex h-11 items-center justify-center rounded-md bg-slate-950 px-5 text-sm font-black text-white transition hover:bg-teal-800"
+              >
+                {t.tryAgain}
+              </button>
+            </div>
+          )}
+        </div>
+
+        <aside className="space-y-5">
+          <div className="surface rounded-lg p-5">
+            <p className="text-sm font-black uppercase text-slate-500">{t.advertisement}</p>
+            <div className="mt-4 min-h-[280px] rounded-md border border-dashed border-slate-300 bg-slate-50">
+              <AdSlot />
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-slate-200 bg-white p-5">
+            <h2 className="text-xl font-black text-slate-950">{t.faq}</h2>
+            <div className="mt-5 space-y-5">
+              {tool.faqs.length > 0 ? (
+                tool.faqs.map((faq) => (
+                  <div key={faq.q.en} className="border-t border-slate-200 pt-5">
+                    <h3 className="font-black text-slate-900">{faq.q[lang as keyof typeof faq.q]}</h3>
+                    <p className="mt-2 text-sm leading-7 text-slate-600">{faq.a[lang as keyof typeof faq.a]}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="border-t border-slate-200 pt-5 text-sm leading-7 text-slate-600">{toolDescription}</p>
+              )}
             </div>
           </div>
         </aside>
-      </div>
+      </section>
     </div>
   );
 }

@@ -3,67 +3,68 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { useState, useEffect, createContext, useContext } from "react";
+import { ArrowRightLeft, Languages } from "lucide-react";
 import { dict } from "../lib/i18n";
+import { LanguageContext, LanguageProvider } from "../components/LanguageProvider";
+import { useContext } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
-const LanguageContext = createContext({ lang: "en", setLang: (l: string) => {} });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState("en");
+function AppShell({ children }: { children: React.ReactNode }) {
+  const { lang, setLang } = useContext(LanguageContext);
+  const t = dict[lang as keyof typeof dict] || dict.en;
 
   return (
-    <html lang={lang}>
+    <>
+      <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
+        <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+          <Link href="/" className="focus-ring flex items-center gap-3 rounded-md" aria-label={t.brand}>
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-700 text-white shadow-sm">
+              <ArrowRightLeft size={20} strokeWidth={2.4} />
+            </span>
+            <span className="text-xl font-black tracking-normal text-slate-950">{t.brand}</span>
+          </Link>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setLang(lang === "en" ? "zh" : "en")}
+              className="focus-ring inline-flex h-10 items-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 transition hover:border-teal-700 hover:text-teal-800"
+              aria-label="Switch language"
+            >
+              <Languages size={17} />
+              <span>{lang === "en" ? "中文" : "EN"}</span>
+            </button>
+            <Link
+              href="/#tools"
+              className="focus-ring hidden h-10 items-center rounded-md bg-slate-950 px-4 text-sm font-bold text-white transition hover:bg-teal-800 sm:inline-flex"
+            >
+              {t.startBtn}
+            </Link>
+          </div>
+        </nav>
+      </header>
+
+      <main>{children}</main>
+
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <span className="font-bold text-slate-800">{t.brand}</span>
+          <span>&copy; 2026 {t.footerDesc}</span>
+        </div>
+      </footer>
+    </>
+  );
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
       <body className={`${inter.className} antialiased`}>
-        <LanguageContext.Provider value={{ lang, setLang }}>
-          <header className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-slate-200/60 h-20">
-            <nav className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-              <Link href="/" className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
-                  <span className="text-white font-black text-xl">E</span>
-                </div>
-                <span className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">
-                  EasyFormat
-                </span>
-              </Link>
-              
-              <div className="hidden md:flex items-center gap-6">
-                <Link href="/" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">
-                  {dict[lang as keyof typeof dict].allTools}
-                </Link>
-                
-                {/* Language Switcher */}
-                <button 
-                  onClick={() => setLang(lang === "en" ? "zh" : "en")}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold hover:bg-slate-50 transition-all text-slate-600"
-                >
-                  <span className={lang === "en" ? "text-blue-600" : ""}>EN</span>
-                  <span className="text-slate-300">|</span>
-                  <span className={lang === "zh" ? "text-blue-600" : ""}>中文</span>
-                </button>
-
-                <Link href="https://easyformat.co" className="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-800 transition-all active:scale-95 shadow-lg shadow-slate-200">
-                   {dict[lang as keyof typeof dict].startBtn}
-                </Link>
-              </div>
-            </nav>
-          </header>
-
-          <main className="pt-20">
-            {children}
-          </main>
-
-          <footer className="bg-white border-t border-slate-100 py-16">
-            <div className="max-w-7xl mx-auto px-4 text-center">
-              <p className="text-slate-400 text-sm">
-                &copy; 2026 EasyFormat. {dict[lang as keyof typeof dict].footerDesc}
-              </p>
-            </div>
-          </footer>
-        </LanguageContext.Provider>
+        <LanguageProvider>
+          <AppShell>{children}</AppShell>
+        </LanguageProvider>
       </body>
     </html>
   );
 }
-
-export { LanguageContext };
