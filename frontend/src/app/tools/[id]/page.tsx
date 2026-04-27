@@ -13,6 +13,7 @@ import {
   Image as ImageIcon,
   Loader2,
   RefreshCcw,
+  ShieldCheck,
   Upload,
 } from "lucide-react";
 import AdSlot from "../../../components/AdSlot";
@@ -21,6 +22,7 @@ import { dict } from "../../../lib/i18n";
 import { Tool, TOOLS } from "../../../lib/tools";
 
 type ConvertStatus = "idle" | "uploading" | "processing" | "completed" | "error";
+const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
 export default function ToolPage() {
   const params = useParams();
@@ -49,6 +51,26 @@ export default function ToolPage() {
     setJobId(null);
     setErrorText("");
     if (inputRef.current) inputRef.current.value = "";
+  };
+
+  const selectFile = (nextFile: File) => {
+    if (!tool) return;
+
+    const fileExt = `.${nextFile.name.split(".").pop()?.toLowerCase() || ""}`;
+    if (!tool.from.includes(fileExt)) {
+      setFile(null);
+      setErrorText(t.unsupportedFile);
+      return;
+    }
+
+    if (nextFile.size > MAX_FILE_SIZE) {
+      setFile(null);
+      setErrorText(t.fileTooLarge);
+      return;
+    }
+
+    setErrorText("");
+    setFile(nextFile);
   };
 
   const checkStatus = (id: string) => {
@@ -168,7 +190,7 @@ export default function ToolPage() {
                 onDragOver={(event) => event.preventDefault()}
                 onDrop={(event) => {
                   event.preventDefault();
-                  if (event.dataTransfer.files[0]) setFile(event.dataTransfer.files[0]);
+                  if (event.dataTransfer.files[0]) selectFile(event.dataTransfer.files[0]);
                 }}
               >
                 <input
@@ -178,8 +200,7 @@ export default function ToolPage() {
                   className="hidden"
                   accept={tool.from.join(",")}
                   onChange={(event) => {
-                    setErrorText("");
-                    if (event.target.files?.[0]) setFile(event.target.files[0]);
+                    if (event.target.files?.[0]) selectFile(event.target.files[0]);
                   }}
                 />
                 <label htmlFor="fileInput" className="focus-ring inline-flex cursor-pointer flex-col items-center rounded-md">
@@ -214,6 +235,7 @@ export default function ToolPage() {
                     <button
                       type="button"
                       onClick={handleUpload}
+                      disabled={isWorking}
                       className="focus-ring inline-flex h-11 items-center justify-center rounded-md bg-teal-700 px-5 text-sm font-black text-white transition hover:bg-teal-800"
                     >
                       {t.convertNow}
@@ -272,12 +294,29 @@ export default function ToolPage() {
           )}
         </div>
 
-        <aside className="space-y-5">
-          <div className="surface rounded-lg p-5">
-            <p className="text-sm font-black uppercase text-slate-500">{t.advertisement}</p>
-            <div className="mt-4 min-h-[280px] rounded-md border border-dashed border-slate-300 bg-slate-50">
-              <AdSlot />
-            </div>
+        <aside className="space-y-5 lg:sticky lg:top-20 lg:self-start">
+          <div className="surface rounded-lg p-4">
+            <AdSlot label={t.advertisement} size="sidebar" />
+          </div>
+
+          <div className="rounded-lg border border-teal-100 bg-teal-50 p-5">
+            <ShieldCheck className="mb-4 text-teal-800" size={24} />
+            <h2 className="text-lg font-black text-slate-950">{t.privacyTitle}</h2>
+            <p className="mt-2 text-sm leading-7 text-slate-600">{t.privacyDesc}</p>
+          </div>
+
+          <div className="rounded-lg border border-slate-200 bg-white p-5">
+            <h2 className="text-lg font-black text-slate-950">{t.howItWorks}</h2>
+            <ol className="mt-4 space-y-3 text-sm font-medium leading-6 text-slate-600">
+              {[t.stepChoose, t.stepUpload, t.stepDownload].map((step, index) => (
+                <li key={step} className="flex gap-3">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-950 text-xs font-black text-white">
+                    {index + 1}
+                  </span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
           </div>
 
           <div className="rounded-lg border border-slate-200 bg-white p-5">
@@ -297,6 +336,10 @@ export default function ToolPage() {
           </div>
         </aside>
       </section>
+
+      <div className="mx-auto max-w-7xl px-4 pb-10">
+        <AdSlot label={t.advertisement} size="leaderboard" />
+      </div>
     </div>
   );
 }

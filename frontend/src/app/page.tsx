@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useContext } from "react";
 import { ArrowRight, FileCheck2, FileText, Image as ImageIcon, ShieldCheck, Sparkles, TimerReset } from "lucide-react";
+import AdSlot from "../components/AdSlot";
 import { LanguageContext } from "../components/LanguageProvider";
 import { dict } from "../lib/i18n";
 import { TOOLS } from "../lib/tools";
@@ -72,6 +73,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <AdSlot label={t.advertisement} size="leaderboard" />
+      </div>
 
       <section id="tools" className="mx-auto max-w-7xl px-4 py-16">
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
