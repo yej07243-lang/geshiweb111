@@ -34,7 +34,7 @@ export const TOOLS: Tool[] = [
     outputFormat: "docx",
     accept: ".pdf",
     category: "document",
-    seoTitle: "PDF to Word Online Free | EasyFormat",
+    seoTitle: "PDF to Word Converter Free Online | EasyFormat",
     seoDescription:
       "Use EasyFormat to convert PDF files to editable Word documents online for free. Fast, simple, secure, and no signup required.",
     howToSteps: ["Choose a PDF file from your device.", "Start the conversion and wait for the file to process.", "Download the converted Word document."],
@@ -59,9 +59,9 @@ export const TOOLS: Tool[] = [
     outputFormat: "pdf",
     accept: ".doc,.docx",
     category: "document",
-    seoTitle: "Word to PDF Online Free | EasyFormat",
+    seoTitle: "Word to PDF Converter Free Online | EasyFormat",
     seoDescription:
-      "Use EasyFormat to convert Word documents to PDF files online for free. Fast, simple, secure, and no signup required.",
+      "Use EasyFormat to convert Word documents to PDF files online for free. Fast, simple, secure, browser-based, and no signup required.",
     howToSteps: ["Select a DOC or DOCX file.", "Click the convert button to create a PDF.", "Download your PDF file when conversion finishes."],
     about:
       "The Word to PDF converter is built for quickly sharing documents in a more portable format. PDF files are easier to send, print, archive, and view consistently across devices. EasyFormat lets you upload a DOC or DOCX file and convert it online without installing office software in your browser workflow. The service is intended for fast, no-signup conversion of everyday documents. Files are stored only temporarily for processing and are automatically deleted after 30 minutes. Formatting accuracy can vary based on fonts, page layout, tables, and embedded media in the original document.",
@@ -84,9 +84,9 @@ export const TOOLS: Tool[] = [
     outputFormat: "png",
     accept: ".jpg,.jpeg",
     category: "image",
-    seoTitle: "JPG to PNG Online Free | EasyFormat",
+    seoTitle: "JPG to PNG Converter Free Online | EasyFormat",
     seoDescription:
-      "Use EasyFormat to convert JPG images to PNG files online for free. Fast, simple, secure, and no signup required.",
+      "Use EasyFormat to convert JPG images to PNG files online for free. Fast, simple, secure, browser-based, and no signup required.",
     howToSteps: ["Choose a JPG or JPEG image.", "Start the conversion to PNG.", "Download the converted PNG file."],
     about:
       "The JPG to PNG converter helps you change common JPEG images into PNG format for design, publishing, or web use. PNG is often preferred when you need lossless output or plan to continue editing an image after conversion. EasyFormat keeps the workflow simple: upload one image, convert it, and download the result. No account is required. Files are processed temporarily and automatically deleted after 30 minutes. Keep in mind that converting JPG to PNG does not restore detail that was already lost in the original compressed JPG file.",
@@ -108,9 +108,9 @@ export const TOOLS: Tool[] = [
     outputFormat: "jpg",
     accept: ".png",
     category: "image",
-    seoTitle: "PNG to JPG Online Free | EasyFormat",
+    seoTitle: "PNG to JPG Converter Free Online | EasyFormat",
     seoDescription:
-      "Use EasyFormat to convert PNG images to JPG files online for free. Fast, simple, secure, and no signup required.",
+      "Use EasyFormat to convert PNG images to JPG files online for free. Fast, simple, secure, browser-based, and no signup required.",
     howToSteps: ["Upload a PNG image.", "Convert the image to JPG.", "Download the new JPG file."],
     about:
       "The PNG to JPG converter is useful when you need a smaller, widely compatible image file. JPG is supported almost everywhere and is often a good choice for photos, email attachments, and web publishing. EasyFormat lets you convert PNG images online with a short no-signup workflow. Upload the image, start conversion, and download the output file. Uploaded and converted files are automatically deleted after 30 minutes. If your PNG includes transparency, the output JPG will not preserve transparent pixels because JPG does not support transparency.",
@@ -132,9 +132,9 @@ export const TOOLS: Tool[] = [
     outputFormat: "jpg",
     accept: ".webp",
     category: "image",
-    seoTitle: "WebP to JPG Online Free | EasyFormat",
+    seoTitle: "WebP to JPG Converter Free Online | EasyFormat",
     seoDescription:
-      "Use EasyFormat to convert WebP images to JPG files online for free. Fast, simple, secure, and no signup required.",
+      "Use EasyFormat to convert WebP images to JPG files online for free. Fast, simple, secure, browser-based, and no signup required.",
     howToSteps: ["Select a WebP image.", "Convert it to JPG format.", "Download the JPG result."],
     about:
       "The WebP to JPG converter helps when you need to use an image in apps, websites, or workflows that do not fully support WebP. JPG remains one of the most compatible image formats for sharing and publishing. EasyFormat provides a lightweight online conversion flow without requiring signup or software installation. Upload your WebP file, convert it, and download the JPG result. Files are temporarily processed and automatically deleted after 30 minutes. Because JPG is a lossy format, the result may differ slightly from the original WebP image.",
@@ -156,9 +156,9 @@ export const TOOLS: Tool[] = [
     outputFormat: "jpg",
     accept: ".jpg,.jpeg,.png,.webp",
     category: "image",
-    seoTitle: "Compress Image Online Free | EasyFormat",
+    seoTitle: "Compress Image Converter Free Online | EasyFormat",
     seoDescription:
-      "Use EasyFormat to compress image files online for free. Fast, simple, secure, and no signup required.",
+      "Use EasyFormat to compress image files online for free. Reduce JPG, PNG, and WebP size fast, securely, with no signup required.",
     howToSteps: ["Choose a JPG, PNG, or WebP image.", "Start compression.", "Download the optimized image file."],
     about:
       "The image compression tool helps reduce file size for uploads, websites, email attachments, and everyday sharing. Smaller images can load faster and are easier to store or send. EasyFormat keeps compression simple with a browser-based workflow: choose an image, process it, and download the result. No signup is required. Uploaded images and generated files are automatically deleted after 30 minutes. Compression may change file format and visual quality depending on the source image and output settings, so review the result before using it in important projects.",

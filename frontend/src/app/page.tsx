@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, FileCheck2, FileText, Image as ImageIcon, ShieldCheck, TimerReset, Upload, UserX, Zap } from "lucide-react";
 import AdSlot from "../components/AdSlot";
+import HomeUploadEntry from "../components/HomeUploadEntry";
 import { TOOLS } from "../lib/tools";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Free Online File Converter | EasyFormat",
+    absolute: "Free Online File Converter Tools | EasyFormat",
   },
   description:
-    "Convert PDF, Word, JPG, PNG, WebP and more online for free. Fast, simple, secure, no signup required.",
+    "Free online file converter for PDF, Word, JPG, PNG, and WebP. Convert documents and images fast with no signup required.",
   alternates: {
     canonical: "https://easyformat.co/",
   },
@@ -53,7 +54,7 @@ const websiteSchema = {
   name: "EasyFormat",
   url: "https://easyformat.co",
   description:
-    "Convert PDF, Word, JPG, PNG, WebP and more online for free. Fast, simple, secure, no signup required.",
+    "Free online file converter for PDF, Word, JPG, PNG, and WebP. Convert documents and images fast with no signup required.",
   potentialAction: {
     "@type": "SearchAction",
     target: "https://easyformat.co/tools/{search_term_string}",
@@ -107,7 +108,7 @@ export default function Home() {
               Free Online File Converter
             </h1>
             <p className="mt-6 max-w-2xl text-lg font-medium leading-8 text-slate-600 md:text-xl">
-              Convert documents and images online in seconds. No signup required.
+              Convert documents and images online in seconds. This file converter includes PDF converter and image converter tools with no signup required.
             </p>
 
             <div className="mt-8 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2">
@@ -137,31 +138,15 @@ export default function Home() {
           </div>
 
           <div className="surface rounded-lg p-4">
-            <div className="rounded-md border border-slate-200 bg-slate-950 p-4 text-white">
-              <div className="mb-5 flex items-center justify-between">
+            <div className="rounded-md border border-slate-200 bg-white p-3">
+              <div className="mb-4 flex items-center justify-between px-1">
                 <div>
-                  <p className="text-sm font-bold text-teal-200">Popular converters</p>
-                  <p className="text-2xl font-black">Start converting</p>
+                  <p className="text-sm font-black uppercase text-teal-800">Upload entry</p>
+                  <h2 className="text-2xl font-black text-slate-950">Start with your file</h2>
                 </div>
-                <FileCheck2 className="text-amber-300" size={32} />
+                <FileCheck2 className="text-amber-500" size={30} />
               </div>
-              <div className="space-y-3">
-                {TOOLS.slice(0, 4).map((tool) => (
-                  <Link
-                    key={tool.id}
-                    href={`/tools/${tool.slug}`}
-                    className="focus-ring flex items-center justify-between rounded-md bg-white/10 p-4 transition hover:bg-white/15"
-                  >
-                    <span>
-                      <span className="block font-black">{tool.name}</span>
-                      <span className="text-sm text-slate-300">
-                        {tool.inputFormats.join(", ")} {"->"} {tool.outputFormat.toUpperCase()}
-                      </span>
-                    </span>
-                    <ArrowRight size={18} />
-                  </Link>
-                ))}
-              </div>
+              <HomeUploadEntry />
             </div>
           </div>
         </div>
@@ -229,23 +214,38 @@ export default function Home() {
 
       <section className="border-y border-slate-200 bg-white">
         <div className="mx-auto max-w-4xl px-4 py-16">
-          <h2 className="text-3xl font-black text-slate-950">What is EasyFormat?</h2>
+          <h2 className="text-3xl font-black text-slate-950">What is a file converter?</h2>
           <div className="mt-6 space-y-5 text-base leading-8 text-slate-700">
             <p>
-              EasyFormat is a lightweight online file converter for common document and image tasks. It is designed for people who need to quickly convert a PDF, Word document, JPG, PNG, WebP image, or compressed image without installing extra software. The goal is to make file conversion feel simple: choose the right tool, upload one file, start the conversion, and download the result.
+              A file converter is a tool that changes a file from one format into another format so it can be opened, edited, shared, printed, uploaded, or archived in the way you need. EasyFormat is a free online file converter built for common document and image tasks. It helps you convert a PDF to Word, create a PDF from a Word document, change JPG images into PNG files, save PNG images as JPG files, convert WebP images to JPG, and compress images for easier sharing. The goal is to make file conversion practical and fast without making users install software or create an account.
             </p>
             <p>
-              Online file converters are useful when you are working across different apps, devices, or publishing workflows. A document may need to become a PDF before sharing, a PDF may need to become an editable Word file, or an image may need a more compatible format before it can be uploaded to a website. EasyFormat focuses on these practical everyday conversions instead of complicated editing features.
+              Online tools are useful because files often move between different apps, devices, teams, and publishing systems. A PDF converter can help when a document needs to become easier to edit or easier to distribute. An image converter can help when a website, marketplace, email service, or design workflow requires a specific image format. Instead of opening a large desktop app for a small task, you can choose a focused converter, upload one file, run the conversion, and download the result in a few steps.
             </p>
             <p>
-              The current supported file types include PDF, DOC, DOCX, JPG, JPEG, PNG, and WebP. The available tools include PDF to Word, Word to PDF, JPG to PNG, PNG to JPG, WebP to JPG, and image compression. More tools can be added over time while keeping the same simple no-signup workflow.
+              EasyFormat supports formats used in everyday work: PDF, DOC, DOCX, JPG, JPEG, PNG, and WebP. These formats cover document sharing, editable office documents, web images, photo files, and compressed modern image files. PDF is often used for final documents because it preserves layout. Word formats are useful when text still needs to be edited. JPG is widely compatible and often smaller for photos. PNG is helpful when clarity matters. WebP is efficient for the web but may not be accepted everywhere, which is why WebP to JPG conversion remains useful.
             </p>
             <p>
-              Privacy and temporary file handling are important for a conversion website. EasyFormat processes uploaded files only for the selected conversion task. Files are temporarily stored while the conversion is running and are deleted automatically after 30 minutes. You should still avoid uploading highly sensitive documents to any online converter, but the service is built to avoid long-term storage of uploaded files.
+              Security and temporary file handling are important for any online converter. EasyFormat processes uploaded files only for the selected conversion task. Files are temporarily stored while the conversion is running and are deleted automatically after 30 minutes. This short retention window helps keep the service practical while avoiding long-term storage of user files. You should still avoid uploading highly sensitive, confidential, legal, medical, or financial documents to any online service, but the workflow is designed around temporary processing rather than permanent storage.
             </p>
             <p>
-              EasyFormat does not require an account. There is no signup step, no dashboard to configure, and no software to install. This makes it useful for fast one-off conversions when you simply need the final file and want to get back to work.
+              A no signup workflow is especially helpful for one-off conversions. Many people only need to convert a single file before sending an email, uploading an image, preparing a document, or fixing a format issue. EasyFormat keeps that path short: choose a converter, upload your file, click the conversion button, and download the new file. There is no dashboard to configure, no trial form, and no software installer. The interface focuses on the conversion job itself.
             </p>
+            <p>
+              The tools are also organized around clear use cases. Use the PDF to Word converter when you need editable text from a PDF. Use the Word to PDF converter when you want a document that is easier to share or print consistently. Use the JPG to PNG and PNG to JPG converters when you need image compatibility for websites or apps. Use the WebP to JPG converter when a platform does not accept WebP. Use image compression when a file is too large for upload, email, or page speed.
+            </p>
+            <p>
+              EasyFormat is not meant to replace professional editing software. It is a quick online utility for common format changes. Conversion quality can depend on the source file, especially for complex PDFs, scanned documents, unusual fonts, transparent images, or heavily compressed files. The best results usually come from clean source files and simple layouts. When a file is important, download the result and review it before publishing or sending it.
+            </p>
+            <p>
+              For website owners, students, office workers, creators, and anyone who handles mixed file formats, a reliable file converter can remove small blockers from daily work. EasyFormat keeps the experience direct, supports common formats, and provides an easy path from upload to download while reminding users that files auto delete after 30 minutes.
+            </p>
+          </div>
+          <div className="mt-8">
+            <Link href="/blog" className="focus-ring inline-flex h-11 items-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-black text-white transition hover:bg-teal-800">
+              Read file conversion guides
+              <ArrowRight size={17} />
+            </Link>
           </div>
         </div>
       </section>
