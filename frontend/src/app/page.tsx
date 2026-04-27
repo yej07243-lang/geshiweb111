@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, FileCheck2, FileText, Image as ImageIcon, ShieldCheck, TimerReset, UserX, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle2, FileCheck2, FileText, Image as ImageIcon, ShieldCheck, TimerReset, Upload, UserX, Zap } from "lucide-react";
 import AdSlot from "../components/AdSlot";
 import { TOOLS } from "../lib/tools";
 
@@ -21,6 +21,8 @@ const benefits = [
   { icon: Zap, label: "Fast conversion" },
   { icon: TimerReset, label: "Files auto-delete after 30 minutes" },
 ];
+
+const popularTools = TOOLS.slice(0, 4);
 
 const faqs = [
   {
@@ -58,6 +60,36 @@ const websiteSchema = {
     "query-input": "required name=search_term_string",
   },
 };
+
+function ToolCard({ tool }: { tool: (typeof TOOLS)[number] }) {
+  const Icon = tool.category === "document" ? FileText : ImageIcon;
+
+  return (
+    <div className="surface flex h-full flex-col rounded-lg p-6 transition hover:-translate-y-1 hover:border-teal-500 hover:shadow-xl">
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <span className="flex h-12 w-12 items-center justify-center rounded-md bg-teal-50 text-teal-800">
+          <Icon size={24} />
+        </span>
+        <span className="rounded-md bg-amber-100 px-2.5 py-1 text-xs font-black text-amber-800">
+          {tool.outputFormat.toUpperCase()}
+        </span>
+      </div>
+      <h3 className="text-xl font-black text-slate-950">{tool.name}</h3>
+      <p className="mt-3 min-h-[56px] text-sm leading-7 text-slate-600">{tool.description}</p>
+      <div className="mt-5 flex items-center justify-between border-t border-slate-200 pt-4 text-sm font-bold text-slate-500">
+        <span>{tool.inputFormats.join(", ")}</span>
+        <span>{tool.outputFormat.toUpperCase()}</span>
+      </div>
+      <Link
+        href={`/tools/${tool.slug}`}
+        className="focus-ring mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-teal-700 px-4 text-sm font-black text-white transition hover:bg-teal-800"
+      >
+        Use this tool
+        <ArrowRight size={17} />
+      </Link>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
@@ -136,40 +168,58 @@ export default function Home() {
       </section>
 
       <section id="tools" className="mx-auto max-w-7xl px-4 py-16">
+        <div className="surface mb-10 grid gap-6 rounded-lg p-6 md:grid-cols-[1fr_auto] md:items-center">
+          <div className="flex gap-4">
+            <span className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-md bg-teal-700 text-white sm:flex">
+              <Upload size={26} />
+            </span>
+            <div>
+              <p className="text-sm font-black uppercase text-teal-800">Quick upload</p>
+              <h2 className="mt-1 text-2xl font-black text-slate-950">Start with a popular converter</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                Choose the file type you want to convert. The upload area is on each converter page so the workflow stays clear and reliable.
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap md:justify-end">
+            {popularTools.map((tool) => (
+              <Link
+                key={tool.id}
+                href={`/tools/${tool.slug}`}
+                className="focus-ring inline-flex h-10 items-center justify-center rounded-md border border-slate-200 bg-white px-3 text-sm font-black text-slate-800 transition hover:border-teal-700 hover:text-teal-800"
+              >
+                {tool.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
+            <p className="mb-2 text-sm font-black uppercase text-teal-800">Popular tools</p>
+            <h2 className="text-3xl font-black text-slate-950 md:text-4xl">Most used converters</h2>
+          </div>
+          <p className="max-w-xl text-slate-600">Start with the four most common conversion workflows.</p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {popularTools.map((tool) => (
+            <ToolCard key={tool.id} tool={tool} />
+          ))}
+        </div>
+
+        <div className="mb-8 mt-16 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
             <p className="mb-2 text-sm font-black uppercase text-teal-800">All tools</p>
-            <h2 className="text-3xl font-black text-slate-950 md:text-4xl">Choose a converter</h2>
+            <h2 className="text-3xl font-black text-slate-950 md:text-4xl">All file converters</h2>
           </div>
           <p className="max-w-xl text-slate-600">Convert PDF, Word, JPG, PNG, WebP and image files with a simple no-signup workflow.</p>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {TOOLS.map((tool) => {
-            const Icon = tool.category === "document" ? FileText : ImageIcon;
-            return (
-              <Link
-                key={tool.id}
-                href={`/tools/${tool.slug}`}
-                className="focus-ring group surface rounded-lg p-6 transition hover:-translate-y-1 hover:border-teal-500 hover:shadow-xl"
-              >
-                <div className="mb-6 flex items-start justify-between gap-4">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-md bg-teal-50 text-teal-800">
-                    <Icon size={24} />
-                  </span>
-                  <span className="rounded-md bg-amber-100 px-2.5 py-1 text-xs font-black text-amber-800">
-                    {tool.outputFormat.toUpperCase()}
-                  </span>
-                </div>
-                <h3 className="text-xl font-black text-slate-950">{tool.name}</h3>
-                <p className="mt-3 min-h-[56px] text-sm leading-7 text-slate-600">{tool.description}</p>
-                <div className="mt-5 flex items-center justify-between border-t border-slate-200 pt-4 text-sm font-bold text-slate-500">
-                  <span>{tool.inputFormats.join(", ")}</span>
-                  <ArrowRight className="text-teal-700 transition group-hover:translate-x-1" size={18} />
-                </div>
-              </Link>
-            );
-          })}
+          {TOOLS.map((tool) => (
+            <ToolCard key={tool.id} tool={tool} />
+          ))}
         </div>
       </section>
 
