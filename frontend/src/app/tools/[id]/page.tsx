@@ -24,10 +24,10 @@ export default function ToolPage() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const res = await fetch("http://localhost:8000/api/upload", { method: "POST", body: formData });
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
       const data = await res.json();
       setJobId(data.job_id);
-      await fetch(`http://localhost:8000/api/convert?job_id=${data.job_id}&target_format=${tool.to}`, { method: "POST" });
+      await fetch(`/api/convert?job_id=${data.job_id}&target_format=${tool.to}`, { method: "POST" });
       setStatus("processing");
       checkStatus(data.job_id);
     } catch (e) {
@@ -37,7 +37,7 @@ export default function ToolPage() {
 
   const checkStatus = async (id: string) => {
     const interval = setInterval(async () => {
-      const res = await fetch(`http://localhost:8000/api/status/${id}`);
+      const res = await fetch(`/api/status/${id}`);
       const data = await res.json();
       if (data.status === "completed") {
         clearInterval(interval);
@@ -97,7 +97,7 @@ export default function ToolPage() {
               <div className="text-center py-20 bg-emerald-50/50 rounded-[2rem] border border-emerald-100">
                 <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6"><Download size={40} /></div>
                 <h3 className="text-2xl font-bold mb-6 text-emerald-900">Your file is ready!</h3>
-                <a href={`http://localhost:8000/api/download/${jobId}`} className="inline-flex items-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl font-extrabold transition-all shadow-xl shadow-emerald-200 active:scale-95"><Download size={20} /> Download File</a>
+                <a href={`/api/download/${jobId}`} className="inline-flex items-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl font-extrabold transition-all shadow-xl shadow-emerald-200 active:scale-95"><Download size={20} /> Download File</a>
                 <button onClick={() => {setFile(null); setStatus("idle");}} className="block mx-auto mt-6 text-emerald-600 font-medium hover:underline text-sm">Convert another file</button>
               </div>
             )}
