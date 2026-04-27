@@ -1,20 +1,21 @@
 FROM node:18-alpine AS base
 
-# Install dependencies only when needed
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
+
+# Set registry to Aliyun to avoid timeout
+RUN npm config set registry https://registry.npmmirror.com
+
 COPY package.json package-lock.json* ./
 RUN npm install
 
-# Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
-# Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV production
