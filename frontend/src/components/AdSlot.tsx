@@ -1,5 +1,4 @@
 "use client";
-
 export default function AdSlot() {
   return (
     <div className="flex flex-col items-center justify-center w-full h-full min-h-[250px] bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl p-4">
