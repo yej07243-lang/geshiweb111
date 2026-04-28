@@ -9,18 +9,18 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://easyformat.co"),
   title: {
-    default: "Free Online File Converter Tools | EasyFormat",
+    default: "Free Online File Converter | EasyFormat",
     template: "%s | EasyFormat",
   },
   description:
-    "Free online file converter for PDF, Word, JPG, PNG, and WebP. Convert documents and images fast with no signup required.",
+    "Convert PDF, Word, JPG, PNG, WebP and more online for free. Fast, simple, secure, no signup required.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Free Online File Converter Tools | EasyFormat",
+    title: "Free Online File Converter | EasyFormat",
     description:
-      "Free online file converter for PDF, Word, JPG, PNG, and WebP. Convert documents and images fast with no signup required.",
+      "Convert PDF, Word, JPG, PNG, WebP and more online for free. Fast, simple, secure, no signup required.",
     url: "https://easyformat.co",
     siteName: "EasyFormat",
     type: "website",
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Link>
 
             <div className="flex items-center gap-4 text-sm font-bold text-slate-700">
-              <Link href="/#tools" className="focus-ring rounded-md hover:text-teal-800">
+              <Link href="/tools" className="focus-ring rounded-md hover:text-teal-800">
                 Tools
               </Link>
               <Link href="/about" className="focus-ring hidden rounded-md hover:text-teal-800 sm:inline">
@@ -72,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/" className="font-black text-slate-900">
                 EasyFormat
               </Link>
-              <p className="mt-2">(c) 2026 EasyFormat. Files are deleted automatically after 30 minutes.</p>
+              <p className="mt-2">© 2026 EasyFormat. Files are deleted automatically after 30 minutes.</p>
             </div>
             <div className="flex flex-wrap gap-4 font-bold">
               {footerLinks.map((link) => (

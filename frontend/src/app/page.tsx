@@ -7,10 +7,10 @@ import { TOOLS } from "../lib/tools";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Free Online File Converter Tools | EasyFormat",
+    absolute: "Free Online File Converter | EasyFormat",
   },
   description:
-    "Free online file converter for PDF, Word, JPG, PNG, and WebP. Convert documents and images fast with no signup required.",
+    "Convert PDF, Word, JPG, PNG, WebP and more online for free. Fast, simple, secure, no signup required.",
   alternates: {
     canonical: "https://easyformat.co/",
   },
@@ -54,7 +54,7 @@ const websiteSchema = {
   name: "EasyFormat",
   url: "https://easyformat.co",
   description:
-    "Free online file converter for PDF, Word, JPG, PNG, and WebP. Convert documents and images fast with no signup required.",
+    "Convert PDF, Word, JPG, PNG, WebP and more online for free. Fast, simple, secure, no signup required.",
   potentialAction: {
     "@type": "SearchAction",
     target: "https://easyformat.co/tools/{search_term_string}",
@@ -108,7 +108,7 @@ export default function Home() {
               Free Online File Converter
             </h1>
             <p className="mt-6 max-w-2xl text-lg font-medium leading-8 text-slate-600 md:text-xl">
-              Convert documents and images online in seconds. This file converter includes PDF converter and image converter tools with no signup required.
+              Convert documents and images online in seconds. No signup required.
             </p>
 
             <div className="mt-8 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2">
@@ -214,7 +214,7 @@ export default function Home() {
 
       <section className="border-y border-slate-200 bg-white">
         <div className="mx-auto max-w-4xl px-4 py-16">
-          <h2 className="text-3xl font-black text-slate-950">What is a file converter?</h2>
+          <h2 className="text-3xl font-black text-slate-950">What is EasyFormat?</h2>
           <div className="mt-6 space-y-5 text-base leading-8 text-slate-700">
             <p>
               A file converter is a tool that changes a file from one format into another format so it can be opened, edited, shared, printed, uploaded, or archived in the way you need. EasyFormat is a free online file converter built for common document and image tasks. It helps you convert a PDF to Word, create a PDF from a Word document, change JPG images into PNG files, save PNG images as JPG files, convert WebP images to JPG, and compress images for easier sharing. The goal is to make file conversion practical and fast without making users install software or create an account.
