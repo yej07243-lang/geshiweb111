@@ -44,7 +44,7 @@ export default function SeoLandingRoute({ params }: SeoLandingRouteProps) {
   const tool = getToolById(page.toolSlug);
   const relatedTools = page.relatedTools.map((slug) => getToolById(slug)).filter(Boolean);
   const fallbackRelatedTools = tool ? getRelatedTools(tool) : [];
-  const internalTools = relatedTools.length >= 3 ? relatedTools : fallbackRelatedTools;
+  const internalTools = relatedTools.length > 0 ? relatedTools : fallbackRelatedTools;
   const sections = getSeoLandingSections(page);
   const faqSchema = {
     "@context": "https://schema.org",
@@ -58,10 +58,19 @@ export default function SeoLandingRoute({ params }: SeoLandingRouteProps) {
       },
     })),
   };
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: page.h1,
+    description: page.description,
+    url: `https://easyformat.co/${page.slug}`,
+    about: page.keyword,
+  };
 
   return (
     <article>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
 
       <section className="soft-band border-b border-slate-200">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 lg:grid-cols-[1fr_360px] lg:py-16">
@@ -168,11 +177,11 @@ export default function SeoLandingRoute({ params }: SeoLandingRouteProps) {
               <Link href="/free-file-converter-online" className="block text-teal-800 hover:underline">
                 Free file converter online
               </Link>
-              <Link href="/reduce-image-size-online" className="block text-teal-800 hover:underline">
-                Reduce image size online
+              <Link href="/convert-mp3-to-flac" className="block text-teal-800 hover:underline">
+                Convert MP3 to FLAC
               </Link>
-              <Link href="/convert-pdf-to-word" className="block text-teal-800 hover:underline">
-                Convert PDF to Word
+              <Link href="/convert-flac-to-aac" className="block text-teal-800 hover:underline">
+                Convert FLAC to AAC
               </Link>
             </div>
           </div>

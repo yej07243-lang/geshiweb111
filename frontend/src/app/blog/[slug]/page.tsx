@@ -42,7 +42,8 @@ export default function BlogArticlePage({ params }: BlogPageProps) {
   if (!article) notFound();
 
   const tool = getToolById(article.toolSlug);
-  const relatedTools = tool ? getRelatedTools(tool) : [];
+  const articleRelatedTools = article.relatedLinks.map((slug) => getToolById(slug)).filter((relatedTool): relatedTool is NonNullable<ReturnType<typeof getToolById>> => Boolean(relatedTool));
+  const relatedTools = articleRelatedTools.length > 0 ? articleRelatedTools : tool ? getRelatedTools(tool) : [];
   const sections = getArticleSections(article);
   const faqSchema = {
     "@context": "https://schema.org",
@@ -56,10 +57,26 @@ export default function BlogArticlePage({ params }: BlogPageProps) {
       },
     })),
   };
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.title,
+    description: article.description,
+    mainEntityOfPage: `https://easyformat.co/blog/${article.slug}`,
+    author: {
+      "@type": "Organization",
+      name: "EasyFormat",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "EasyFormat",
+    },
+  };
 
   return (
     <article className="mx-auto max-w-4xl px-4 py-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
 
       <Link href="/blog" className="focus-ring text-sm font-black text-teal-800 hover:underline">
         Back to guides

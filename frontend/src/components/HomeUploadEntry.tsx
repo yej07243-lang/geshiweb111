@@ -36,7 +36,7 @@ export default function HomeUploadEntry() {
           id="home-upload"
           type="file"
           className="hidden"
-          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
+          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.mp3,.flac,.aac"
           onChange={(event) => handleFile(event.target.files?.[0])}
         />
         <label htmlFor="home-upload" className="focus-ring inline-flex cursor-pointer flex-col items-center rounded-md">
@@ -44,7 +44,7 @@ export default function HomeUploadEntry() {
             <Upload size={26} />
           </span>
           <span className="text-xl font-black text-slate-950">Drag and drop a file</span>
-          <span className="mt-2 text-sm font-bold text-slate-500">PDF, Word, JPG, PNG, WebP · Max 20MB</span>
+          <span className="mt-2 text-sm font-bold text-slate-500">PDF, Word, JPG, PNG, WebP, MP3, FLAC, AAC · Max 200MB</span>
         </label>
       </div>
 

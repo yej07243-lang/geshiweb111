@@ -1,11 +1,12 @@
 FROM python:3.11-slim
 
-# 安装 LibreOffice 和基础库
+# 安装 LibreOffice、FFmpeg 和基础库
 RUN apt-get update && apt-get install -y \
     libreoffice \
     libreoffice-writer \
     libreoffice-calc \
     libreoffice-impress \
+    ffmpeg \
     libmagic1 \
     && rm -rf /var/lib/apt/lists/*
 

@@ -13,7 +13,7 @@ export type Tool = {
   inputFormats: string[];
   outputFormat: string;
   accept: string;
-  category: "document" | "image";
+  category: "document" | "image" | "audio";
   seoTitle: string;
   seoDescription: string;
   howToSteps: string[];
@@ -93,7 +93,7 @@ export const TOOLS: Tool[] = [
     faq: [
       { question: "Can I convert JPEG files too?", answer: "Yes. Both .jpg and .jpeg files are supported." },
       { question: "Will JPG to PNG make the image transparent?", answer: "No. Conversion changes the format, but it does not automatically remove backgrounds." },
-      { question: "Is there a file size limit?", answer: "Yes. The current maximum upload size is 20MB." },
+      { question: "Is there a file size limit?", answer: "Yes. The current maximum upload size is 200MB." },
     ],
     relatedTools: ["png-to-jpg", "webp-to-jpg", "compress-image"],
   },
@@ -140,7 +140,7 @@ export const TOOLS: Tool[] = [
       "The WebP to JPG converter helps when you need to use an image in apps, websites, or workflows that do not fully support WebP. JPG remains one of the most compatible image formats for sharing and publishing. EasyFormat provides a lightweight online conversion flow without requiring signup or software installation. Upload your WebP file, convert it, and download the JPG result. Files are temporarily processed and automatically deleted after 30 minutes. Because JPG is a lossy format, the result may differ slightly from the original WebP image.",
     faq: [
       { question: "Why convert WebP to JPG?", answer: "JPG is more widely supported by older apps, websites, and devices." },
-      { question: "Is WebP upload supported?", answer: "Yes. You can upload .webp files up to 20MB." },
+      { question: "Is WebP upload supported?", answer: "Yes. You can upload .webp files up to 200MB." },
       { question: "Are images stored permanently?", answer: "No. Files are automatically deleted after 30 minutes." },
     ],
     relatedTools: ["jpg-to-png", "png-to-jpg", "compress-image"],
@@ -168,6 +168,54 @@ export const TOOLS: Tool[] = [
       { question: "Is the image compressor free?", answer: "Yes. You can compress images for free without signup." },
     ],
     relatedTools: ["jpg-to-png", "png-to-jpg", "webp-to-jpg"],
+  },
+  {
+    id: "mp3-to-flac",
+    slug: "mp3-to-flac",
+    name: "MP3 to FLAC",
+    title: "MP3 to FLAC Converter",
+    description: "Convert MP3 audio files to FLAC online for free.",
+    action: "convert MP3 audio files to FLAC files",
+    inputFormats: [".mp3"],
+    outputFormat: "flac",
+    accept: ".mp3,audio/mpeg",
+    category: "audio",
+    seoTitle: "MP3 to FLAC Online Free | EasyFormat",
+    seoDescription:
+      "Use EasyFormat to convert MP3 audio files to FLAC online for free. Fast, simple, secure, and no signup required.",
+    howToSteps: ["Choose an MP3 audio file.", "Start the conversion to FLAC.", "Download the converted FLAC file."],
+    about:
+      "The MP3 to FLAC converter helps you save an MP3 audio file in a lossless FLAC container for workflows that require FLAC compatibility. EasyFormat keeps the process simple: upload one MP3 file, convert it online, and download the FLAC result. No account is required. Uploaded and converted files are temporarily processed and automatically deleted after 30 minutes. Converting MP3 to FLAC does not restore audio detail that was already removed by MP3 compression, but it can still be useful when a destination app or archive workflow requires FLAC files.",
+    faq: [
+      { question: "Will MP3 to FLAC improve audio quality?", answer: "No. FLAC is lossless, but converting from MP3 cannot restore detail that was already lost." },
+      { question: "Why convert MP3 to FLAC?", answer: "Use it when an app, archive, or workflow specifically requires FLAC files." },
+      { question: "Are audio files stored permanently?", answer: "No. Files are automatically deleted after 30 minutes." },
+    ],
+    relatedTools: ["flac-to-aac"],
+  },
+  {
+    id: "flac-to-aac",
+    slug: "flac-to-aac",
+    name: "FLAC to AAC",
+    title: "FLAC to AAC Converter",
+    description: "Convert FLAC audio files to AAC online for free.",
+    action: "convert FLAC audio files to AAC files",
+    inputFormats: [".flac"],
+    outputFormat: "aac",
+    accept: ".flac,audio/flac",
+    category: "audio",
+    seoTitle: "FLAC to AAC Online Free | EasyFormat",
+    seoDescription:
+      "Use EasyFormat to convert FLAC audio files to AAC online for free. Fast, simple, secure, and no signup required.",
+    howToSteps: ["Select a FLAC audio file.", "Convert it to AAC format.", "Download the AAC result."],
+    about:
+      "The FLAC to AAC converter is useful when you need a smaller, widely supported audio file for phones, media libraries, sharing, or playback workflows. FLAC preserves audio without lossy compression, while AAC is designed for efficient playback at smaller file sizes. EasyFormat lets you upload a FLAC file, convert it in the browser workflow, and download an AAC result without signing up. Files are processed temporarily and automatically deleted after 30 minutes. Because AAC is lossy, review the converted audio before using it in important projects.",
+    faq: [
+      { question: "Will AAC be smaller than FLAC?", answer: "Usually yes. AAC uses lossy compression and is often much smaller than FLAC." },
+      { question: "Does FLAC to AAC reduce quality?", answer: "AAC is lossy, so some audio detail can be removed during conversion." },
+      { question: "Do I need to install software?", answer: "No. The converter runs online in your browser." },
+    ],
+    relatedTools: ["mp3-to-flac"],
   },
 ];
 

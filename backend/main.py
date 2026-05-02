@@ -10,7 +10,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
-from converter import convert_image, convert_office_to_pdf, convert_pdf_to_word
+from converter import convert_audio, convert_image, convert_office_to_pdf, convert_pdf_to_word
 
 # 初始化
 app = FastAPI(title="File Converter API")
@@ -31,10 +31,12 @@ OUTPUT_DIR = Path("outputs")
 UPLOAD_DIR.mkdir(exist_ok=True)
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-MAX_FILE_SIZE = 20 * 1024 * 1024  # 20MB
+MAX_FILE_SIZE = 200 * 1024 * 1024  # 200MB
+CHUNK_SIZE = 1024 * 1024
 ALLOWED_EXTENSIONS = {
-    ".pdf", ".docx", ".doc", ".jpg", ".jpeg", ".png", ".webp"
+    ".pdf", ".docx", ".doc", ".jpg", ".jpeg", ".png", ".webp", ".mp3", ".flac", ".aac"
 }
+AUDIO_FORMATS = {"mp3", "flac", "aac"}
 
 # 任务状态存储 (内存中，MVP适用)
 jobs: Dict[str, dict] = {}
@@ -45,17 +47,19 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
     ext = Path(file.filename).suffix.lower()
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(status_code=400, detail="Unsupported file format")
-    
-    # 检查文件大小 (流式读取以防大文件撑爆内存)
-    content = await file.read()
-    if len(content) > MAX_FILE_SIZE:
-        raise HTTPException(status_code=400, detail="File too large (Max 20MB)")
-    
+
     job_id = str(uuid.uuid4())
     file_path = UPLOAD_DIR / f"{job_id}{ext}"
-    
+
+    # 检查文件大小并分块写入，避免大文件一次性占用内存。
+    size = 0
     with open(file_path, "wb") as f:
-        f.write(content)
+        while chunk := await file.read(CHUNK_SIZE):
+            size += len(chunk)
+            if size > MAX_FILE_SIZE:
+                file_path.unlink(missing_ok=True)
+                raise HTTPException(status_code=400, detail="File too large (Max 200MB)")
+            f.write(chunk)
     
     jobs[job_id] = {
         "status": "uploaded",
@@ -82,6 +86,8 @@ async def start_convert(job_id: str, target_format: str, background_tasks: Backg
         try:
             if target_format.lower() in ["jpg", "jpeg", "png", "webp"]:
                 await asyncio.to_thread(convert_image, source_path, output_path, quality)
+            elif target_format.lower() in AUDIO_FORMATS:
+                await asyncio.to_thread(convert_audio, source_path, output_path)
             elif target_format.lower() == "pdf":
                 result = await asyncio.to_thread(convert_office_to_pdf, source_path, OUTPUT_DIR)
                 if result: os.rename(result, output_path)

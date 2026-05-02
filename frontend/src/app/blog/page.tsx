@@ -6,7 +6,7 @@ import { BLOG_ARTICLES } from "../../lib/blog";
 export const metadata: Metadata = {
   title: "File Conversion Guides and Tips | EasyFormat",
   description:
-    "Read practical file conversion guides for PDF, Word, JPG, PNG, WebP, image compression, online safety, and upload workflows.",
+    "Read practical file conversion guides for PDF, Word, JPG, PNG, WebP, MP3, FLAC, AAC, image compression, audio conversion, online safety, and upload workflows.",
   alternates: {
     canonical: "https://easyformat.co/blog",
   },
@@ -19,7 +19,7 @@ export default function BlogIndexPage() {
         <p className="text-sm font-black uppercase text-teal-800">EasyFormat Blog</p>
         <h1 className="mt-3 text-4xl font-black text-slate-950 md:text-6xl">File Conversion Guides</h1>
         <p className="mt-5 text-lg leading-8 text-slate-600">
-          Learn how to convert, compress, prepare, and safely handle common document and image formats online.
+          Learn how to convert, compress, prepare, and safely handle common document, image, and audio formats online.
         </p>
       </div>
 

@@ -13,14 +13,14 @@ export const metadata: Metadata = {
     template: "%s | EasyFormat",
   },
   description:
-    "Convert PDF, Word, JPG, PNG, WebP and more online for free. Fast, simple, secure, no signup required.",
+    "Convert PDF, Word, JPG, PNG, WebP, MP3, FLAC, AAC and more online for free. Fast, simple, secure, no signup required.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "Free Online File Converter | EasyFormat",
     description:
-      "Convert PDF, Word, JPG, PNG, WebP and more online for free. Fast, simple, secure, no signup required.",
+      "Convert PDF, Word, JPG, PNG, WebP, MP3, FLAC, AAC and more online for free. Fast, simple, secure, no signup required.",
     url: "https://easyformat.co",
     siteName: "EasyFormat",
     type: "website",

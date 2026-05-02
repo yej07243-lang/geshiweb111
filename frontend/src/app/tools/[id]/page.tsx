@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, FileText, Home, Image as ImageIcon, ShieldCheck } from "lucide-react";
+import { ArrowRight, FileText, Home, Image as ImageIcon, Music, ShieldCheck } from "lucide-react";
 import AdSlot from "../../../components/AdSlot";
 import { getRelatedTools, getToolById, TOOLS } from "../../../lib/tools";
 import ToolConverter from "./ToolConverter";
@@ -28,12 +28,14 @@ function detailedToolGuide(tool: (typeof TOOLS)[number]) {
   const categoryCopy =
     tool.category === "document"
       ? "Document formats carry layout, text structure, fonts, images, tables, and editing expectations. A document converter should be used with a review step because the result may need small adjustments before it is sent to a client, submitted to a portal, or archived."
+      : tool.category === "audio"
+        ? "Audio formats balance compatibility, file size, playback support, bitrate, and quality expectations. An audio converter should be used with a listening check because lossy output can change detail, loudness, or perceived clarity depending on the source and target format."
       : "Image formats balance file size, compatibility, transparency, sharpness, and compression. An image converter should be used with a visual review step because the output may change quality, background behavior, or file weight depending on the original image.";
 
   return [
     `${tool.title} is built for a common file preparation problem: the file you have is not the file your next step requires. That next step might be an upload form, an email attachment, a website image slot, a document review process, a school assignment, or a customer delivery. Instead of opening a large editor for one export, EasyFormat gives you a focused browser workflow for ${tool.action}. The page shows supported input formats, the output format, a direct upload area, conversion steps, FAQ answers, and related tools so users can finish the task without guessing where to go next.`,
     `${categoryCopy} For the best result, start with a clean source file that opens correctly on your device. Avoid password-protected, damaged, or unusually complex files when possible. After downloading the converted output, open it and check the important details: text, page breaks, image clarity, transparency, table alignment, file size, and whether the receiving platform accepts the final extension. This quick review is especially important when the file will be used in a public website, business workflow, school submission, or official document exchange.`,
-    `EasyFormat also keeps each tool connected to nearby workflows. A user who converts a PDF to Word may later need Word to PDF after editing. A user who converts PNG to JPG may then need image compression for upload limits. A user who works with WebP may need JPG for compatibility and PNG for editing. Internal links on this page are not decorative; they help users move through a realistic file preparation process. Choose the tool that matches the output you need, keep the original until the result is accepted, and use related converters only when the destination actually requires another change.`,
+    `EasyFormat also keeps each tool connected to nearby workflows. A user who converts a PDF to Word may later need Word to PDF after editing. A user who converts PNG to JPG may then need image compression for upload limits. A user who works with WebP may need JPG for compatibility and PNG for editing. A user converting audio may need a format that works better for playback, archiving, editing, or sharing. Internal links on this page are not decorative; they help users move through a realistic file preparation process. Choose the tool that matches the output you need, keep the original until the result is accepted, and use related converters only when the destination actually requires another change.`,
     `File handling should stay practical and cautious. EasyFormat processes files temporarily for the selected conversion and files auto delete after 30 minutes. That short retention period is useful for everyday tasks, but no online converter should be treated as the right place for every file. Avoid uploading highly sensitive legal, medical, financial, confidential, or unauthorized content. For ordinary files, the workflow is simple: upload, convert, download, review, and continue with your larger task.`,
   ];
 }
@@ -80,7 +82,7 @@ export default function ToolPage({ params }: ToolPageProps) {
   const tool = getToolById(params.id);
   if (!tool) notFound();
 
-  const Icon = tool.category === "document" ? FileText : ImageIcon;
+  const Icon = tool.category === "document" ? FileText : tool.category === "audio" ? Music : ImageIcon;
   const relatedTools = getRelatedTools(tool);
   const faqSchema = {
     "@context": "https://schema.org",
@@ -194,7 +196,7 @@ export default function ToolPage({ params }: ToolPageProps) {
                 The converter is built for straightforward browser-based tasks where speed and clarity are more important than advanced editing. It works best when the source file is not damaged, password protected, or unusually complex. Some conversions can change visual quality, layout, transparency, fonts, or compression depending on the source format and output format. Always review the downloaded result before using it in a final document, production website, customer delivery, or official submission.
               </p>
               <p>
-                EasyFormat also links to related converters so you can continue working without searching again. For example, a user converting images may also need compression, while a user working with documents may need both PDF creation and editable Word output. These internal links help you move between common file conversion tasks while keeping every page focused on a specific keyword and use case.
+                EasyFormat also links to related converters so you can continue working without searching again. For example, a user converting images may also need compression, a user working with documents may need both PDF creation and editable Word output, and a user converting audio may need a different playback or archive format. These internal links help you move between common file conversion tasks while keeping every page focused on a specific keyword and use case.
               </p>
             </div>
           </section>

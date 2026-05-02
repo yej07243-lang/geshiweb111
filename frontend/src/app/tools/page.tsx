@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, FileText, Image as ImageIcon, ShieldCheck, TimerReset, UserX, Zap } from "lucide-react";
+import { ArrowRight, FileText, Image as ImageIcon, Music, ShieldCheck, TimerReset, UserX, Zap } from "lucide-react";
 import { TOOLS } from "../../lib/tools";
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     absolute: "Online File Converter Tools | EasyFormat",
   },
   description:
-    "Browse EasyFormat online file converter tools for PDF, Word, JPG, PNG, WebP, and image compression workflows.",
+    "Browse EasyFormat online file converter tools for PDF, Word, JPG, PNG, WebP, MP3, FLAC, AAC, and image compression workflows.",
   alternates: {
     canonical: "https://easyformat.co/tools",
   },
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const faq = [
   {
     question: "What tools are available on EasyFormat?",
-    answer: "EasyFormat includes PDF to Word, Word to PDF, JPG to PNG, PNG to JPG, WebP to JPG, and image compression tools.",
+    answer: "EasyFormat includes PDF to Word, Word to PDF, JPG to PNG, PNG to JPG, WebP to JPG, image compression, and audio conversion tools.",
   },
   {
     question: "Are the tools free?",
@@ -41,7 +41,7 @@ const highlights = [
 ];
 
 function ToolListCard({ tool }: { tool: (typeof TOOLS)[number] }) {
-  const Icon = tool.category === "document" ? FileText : ImageIcon;
+  const Icon = tool.category === "document" ? FileText : tool.category === "audio" ? Music : ImageIcon;
 
   return (
     <Link
@@ -87,7 +87,7 @@ export default function ToolsIndexPage() {
           <p className="text-sm font-black uppercase text-teal-800">All converters</p>
           <h1 className="mt-4 max-w-4xl text-4xl font-black leading-tight text-slate-950 md:text-6xl">Online File Converter Tools</h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600">
-            Browse every EasyFormat converter in one place. Convert documents and images online with focused tools for PDF, Word, JPG, PNG, WebP, and image compression tasks.
+            Browse every EasyFormat converter in one place. Convert documents, images, and audio online with focused tools for PDF, Word, JPG, PNG, WebP, MP3, FLAC, AAC, and image compression tasks.
           </p>
         </div>
       </section>
@@ -108,10 +108,10 @@ export default function ToolsIndexPage() {
               The easiest way to choose an online file converter is to start with the destination. If a form asks for a JPG image, use an image converter or compressor that produces a compatible image. If a teammate needs an editable document, use PDF to Word. If a file needs to be shared or printed with stable layout, use Word to PDF. EasyFormat keeps each tool page focused on one conversion so users do not have to sort through advanced export settings for a simple task.
             </p>
             <p>
-              Document conversion and image conversion solve different problems. PDF is strong for final layout, while Word documents are better when text needs editing. JPG is widely accepted and often smaller for photos. PNG is useful for crisp graphics and screenshots. WebP is efficient for websites, but some older tools and upload forms still prefer JPG. Compression is useful when the format is correct but the file is too heavy for upload, email, page speed, or storage.
+              Document conversion, image conversion, and audio conversion solve different problems. PDF is strong for final layout, while Word documents are better when text needs editing. JPG is widely accepted and often smaller for photos. PNG is useful for crisp graphics and screenshots. WebP is efficient for websites, but some older tools and upload forms still prefer JPG. MP3, FLAC, and AAC are useful when audio needs to move between playback, archive, editing, and sharing workflows. Compression is useful when the format is correct but the file is too heavy for upload, email, page speed, or storage.
             </p>
             <p>
-              A good workflow is simple: choose the tool that matches your current file and required output, upload the file, run the conversion, download the result, and review it before using it. Review matters because conversion can change layout, image quality, transparency, fonts, or file size. For important documents and images, keep the original file until you know the converted version works for the destination.
+              A good workflow is simple: choose the tool that matches your current file and required output, upload the file, run the conversion, download the result, and review it before using it. Review matters because conversion can change layout, image quality, audio quality, transparency, fonts, or file size. For important documents, images, and audio files, keep the original file until you know the converted version works for the destination.
             </p>
             <p>
               EasyFormat is built for common one-file tasks rather than complex editing. The tools are useful for school assignments, office documents, website images, support attachments, marketplace photos, resumes, forms, and everyday sharing. They are also helpful when you are on a device without the original software installed. Instead of opening a large desktop app for one export, you can use a focused browser-based converter and finish the job in a few steps.
@@ -149,11 +149,11 @@ export default function ToolsIndexPage() {
           <Link href="/convert-pdf-to-word" className="focus-ring rounded-md border border-slate-200 bg-white p-4 text-sm font-black text-slate-900 hover:border-teal-700 hover:text-teal-800">
             Convert PDF to Word
           </Link>
-          <Link href="/reduce-image-size-online" className="focus-ring rounded-md border border-slate-200 bg-white p-4 text-sm font-black text-slate-900 hover:border-teal-700 hover:text-teal-800">
-            Reduce image size online
+          <Link href="/convert-mp3-to-flac" className="focus-ring rounded-md border border-slate-200 bg-white p-4 text-sm font-black text-slate-900 hover:border-teal-700 hover:text-teal-800">
+            Convert MP3 to FLAC
           </Link>
-          <Link href="/free-file-converter-online" className="focus-ring rounded-md border border-slate-200 bg-white p-4 text-sm font-black text-slate-900 hover:border-teal-700 hover:text-teal-800">
-            Free file converter online
+          <Link href="/audio-converter-online" className="focus-ring rounded-md border border-slate-200 bg-white p-4 text-sm font-black text-slate-900 hover:border-teal-700 hover:text-teal-800">
+            Audio converter online
           </Link>
         </div>
       </section>

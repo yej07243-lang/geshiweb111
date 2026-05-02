@@ -6,8 +6,9 @@ A simple, fast, and secure online file converter built with Next.js, FastAPI, an
 - **PDF to Word**: Experimental high-fidelity conversion.
 - **Word to PDF**: Professional conversion using LibreOffice.
 - **Image Conversion**: JPG, PNG, WebP support via Pillow.
+- **Audio Conversion**: MP3, FLAC, and AAC support via FFmpeg.
 - **Image Compression**: Optimize images for the web.
-- **Security**: 20MB limit, auto-deletion after 30 minutes, IP rate limiting.
+- **Security**: 200MB limit, auto-deletion after 30 minutes, IP rate limiting.
 - **SEO**: Dynamic metadata, sitemaps, and FAQ schemas.
 
 ## Tech Stack
@@ -21,6 +22,7 @@ A simple, fast, and secure online file converter built with Next.js, FastAPI, an
 - Node.js 18+
 - Python 3.11+
 - LibreOffice (for document conversions)
+- FFmpeg (for audio conversions)
 
 ### Backend Setup
 ```bash
@@ -57,7 +59,7 @@ Open `http://localhost` in your browser.
 ## Security Notes
 - Files are stored in `backend/uploads` and `backend/outputs`.
 - A background task `cleanup.py` runs every 10 minutes to delete files older than 30 minutes.
-- Nginx limits the request body size to 20MB.
+- Nginx limits the request body size to 200MB.
 
 ## License
 MIT

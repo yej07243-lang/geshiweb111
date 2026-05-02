@@ -1,15 +1,30 @@
 import subprocess
 from pathlib import Path
 
-from PIL import Image
-
 
 def convert_image(input_path: Path, output_path: Path, quality: int = 85):
     """Convert or compress an image with Pillow."""
+    from PIL import Image
+
     with Image.open(input_path) as img:
         if img.mode in ("RGBA", "P") and output_path.suffix.lower() in [".jpg", ".jpeg"]:
             img = img.convert("RGB")
         img.save(output_path, quality=quality)
+
+
+def convert_audio(input_path: Path, output_path: Path):
+    """Convert audio files with FFmpeg."""
+    cmd = ["ffmpeg", "-y", "-i", str(input_path), "-vn"]
+
+    suffix = output_path.suffix.lower()
+    if suffix == ".aac":
+        cmd.extend(["-c:a", "aac", "-b:a", "192k"])
+    elif suffix == ".flac":
+        cmd.extend(["-c:a", "flac"])
+
+    cmd.append(str(output_path))
+    subprocess.run(cmd, check=True, capture_output=True)
+    return output_path if output_path.exists() and output_path.stat().st_size > 0 else None
 
 
 def convert_office_to_pdf(input_path: Path, output_dir: Path):

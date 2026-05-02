@@ -5,7 +5,8 @@ import { AlertCircle, CheckCircle2, Download, FileText, Loader2, RefreshCcw, Upl
 import type { Tool } from "../../../lib/tools";
 
 type ConvertStatus = "idle" | "uploading" | "processing" | "completed" | "error";
-const MAX_FILE_SIZE = 20 * 1024 * 1024;
+const MAX_FILE_SIZE = 200 * 1024 * 1024;
+const MAX_FILE_SIZE_LABEL = "200MB";
 
 export default function ToolConverter({ tool }: { tool: Tool }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -34,7 +35,7 @@ export default function ToolConverter({ tool }: { tool: Tool }) {
 
     if (nextFile.size > MAX_FILE_SIZE) {
       setFile(null);
-      setErrorText("File is larger than 20MB.");
+      setErrorText(`File is larger than ${MAX_FILE_SIZE_LABEL}.`);
       return;
     }
 
@@ -122,7 +123,7 @@ export default function ToolConverter({ tool }: { tool: Tool }) {
               </span>
               <span className="text-2xl font-black text-slate-950">Drop a file here or click to choose</span>
               <span className="mt-3 text-sm font-bold text-slate-500">
-                {tool.inputFormats.join(", ")} · Max 20MB
+                {tool.inputFormats.join(", ")} · Max {MAX_FILE_SIZE_LABEL}
               </span>
             </label>
           </div>
